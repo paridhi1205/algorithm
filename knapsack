@@ -1,0 +1,49 @@
+#include <stdio.h> 
+ 
+// Utility function to find the maximum of two integers 
+int max(int a, int b) {  
+    return (a > b) ? a : b;  
+} 
+ 
+int main() { 
+    int n, W, val[100], wt[100]; 
+ 
+    // --- 1. Get User Input --- 
+    printf("Enter number of items: "); 
+    scanf("%d", &n); 
+ 
+    printf("Enter value and weight for %d items (e.g., '60 10'):\n", n); 
+    for (int i = 0; i < n; i++) { 
+        scanf("%d %d", &val[i], &wt[i]); 
+    } 
+ 
+    printf("Enter knapsack capacity: "); 
+    scanf("%d", &W); 
+ 
+    // --- 2. 0/1 Knapsack DP Algorithm --- 
+    // Create a 2D array to store the maximum value at each capacity 
+    int K[n + 1][W + 1]; 
+ 
+    // Build the table K[][] in a bottom-up manner 
+    for (int i = 0; i <= n; i++) { 
+        for (int w = 0; w <= W; w++) { 
+            if (i == 0 || w == 0) { 
+                K[i][w] = 0; // Base case: 0 items or 0 capacity means 0 value 
+            }  
+            else if (wt[i - 1] <= w) { 
+                // Item can fit: take the max of including it vs. excluding it 
+                K[i][w] = max(val[i - 1] + K[i - 1][w - wt[i - 1]], K[i - 1][w]); 
+            }  
+            else { 
+                // Item is too heavy to fit: exclude it 
+                K[i][w] = K[i - 1][w]; 
+            } 
+        } 
+    } 
+ 
+    // --- 3. Print the Result --- 
+    // The bottom-right cell contains the maximum value for n items and W capacity 
+    printf("Maximum value that can be put in knapsack: %d\n", K[n][W]); 
+ 
+    return 0; 
+} 
