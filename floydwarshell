@@ -1,0 +1,51 @@
+#include <stdio.h> 
+ 
+#define MAX_V 100 
+#define INF 99999 // We use a large number to represent Infinity 
+ 
+int main() { 
+    int V; 
+    int dist[MAX_V][MAX_V]; 
+ 
+    // --- 1. Get User Input --- 
+    printf("Enter number of vertices: "); 
+    scanf("%d", &V); 
+ 
+    printf("Enter the adjacency matrix (use %d for Infinity/no edge):\n", INF); 
+    for (int i = 0; i < V; i++) { 
+        for (int j = 0; j < V; j++) { 
+            scanf("%d", &dist[i][j]); 
+        } 
+    } 
+ 
+    // --- 2. Floyd-Warshall Algorithm --- 
+    // k is the intermediate vertex 
+    for (int k = 0; k < V; k++) { 
+        // i is the source vertex 
+        for (int i = 0; i < V; i++) { 
+            // j is the destination vertex 
+            for (int j = 0; j < V; j++) { 
+                // If the path through 'k' is shorter, update dist[i][j] 
+                if (dist[i][k] + dist[k][j] < dist[i][j]) { 
+                    dist[i][j] = dist[i][k] + dist[k][j]; 
+                } 
+            } 
+        } 
+    } 
+ 
+    // --- 3. Print the Results --- 
+    printf("\nShortest distances between every pair of vertices:\n"); 
+    for (int i = 0; i < V; i++) { 
+        for (int j = 0; j < V; j++) { 
+            // If the distance is INF or greater, it's unreachable 
+            if (dist[i][j] >= INF) { 
+                printf("INF \t"); 
+            } else { 
+                printf("%d \t", dist[i][j]); 
+            } 
+        } 
+        printf("\n"); 
+    } 
+ 
+    return 0; 
+} 
